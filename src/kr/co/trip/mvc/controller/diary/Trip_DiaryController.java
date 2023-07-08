@@ -46,6 +46,7 @@ public class Trip_DiaryController {
 	}
 	// 다이어리 처리 완료하기
 	// git test
+	// git test2
 	/*
 	@PostMapping("/addDiary")
 	public ModelAndView addDiary(Trip_DiaryVO vo, HttpServletRequest request) {
