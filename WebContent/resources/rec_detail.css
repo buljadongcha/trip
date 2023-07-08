@@ -1,0 +1,30 @@
+@charset "utf-8";
+
+/* reset */
+* {box-sizing: border-box;}
+body {margin: 30px 0 0 0; font-family: 'Noto Sans KR', sans-serif; cursor: default;}
+a {text-decoration: none; color: #ffffff;}
+ul {list-style: none; padding-left: 0}
+.section_container {max-width: 1100px; margin: auto;}
+
+/* 상단 슬라이더 */
+.sample-slider{width:50%;}
+.sample-slider img{width: 100%;}
+.sample-slider{width:70%;}
+.sample-slider .swiper-slide{border-radius: 20px;}
+.sample-slider img{width: 100%; vertical-align: bottom;}
+
+.plan-wrap {margin: 0 auto;}
+.plan-btn {text-align: center; margin-bottom: 30px;}
+.plan-btn-item {width: 45%; background-color: #fff; padding: 10px 10px; border: 1px solid #bcbcbc; border-radius: 5px;}
+
+.sec1 h2 {padding: 30px 50px;}
+.sec1 h2 span {text-align: center; padding-right: 20px; position: relative; font-size: 18px;}
+.sec1 h2 span::after {content: ''; width: 2px; height: 20px; background: #bcbcbc; position: absolute; left: calc(50% + 28px); bottom: 4px;}
+
+.plan-sec {padding: 30px 70px;}
+.plan-sec p {text-align: left; padding-left: 36px; padding-top: 8px; position: relative; font-size: 14px; margin: 0;}
+.plan-sec p::before {content: ''; width: 2px; height: 100%; background: #f5f5f5; position: absolute; left: 12px; bottom: -2px;}
+
+.tit {margin: 0; font-size: 18px;}
+.tit span {background-color: #975ffe; padding: 2px 8px; border-radius: 50px; color: #fff; font-size: 16px;}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-config.dtd">
+ <configuration>
+ 	 <settings> <setting name="jdbcTypeForNull" value="NULL" /> </settings>
+	 <typeAliases>
+		 <typeAlias type="kr.co.trip.mvc.vo.FreeBoardVO" alias="fbvo"/>
+		 <typeAlias type="kr.co.trip.mvc.vo.FreeBoard_CommVO" alias="fbcommvo"/>
+		 <typeAlias type="kr.co.trip.mvc.vo.Trip_MemberVO" alias="tmvo"/>
+		 
+		 	 <!-- Trip_Diary VO -->
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Trip_DiaryVO" alias="divo"/>
+		 	 <!--  <typeAlias type="kr.co.trip.mvc.vo.Trip_Diary_TranVO" alias="trvo"/> -->
+		 	 <!--  <typeAlias type="kr.co.trip.mvc.vo.Trip_Diary_PlanVO" alias="plvo"/> -->
+		 	 <!--  <typeAlias type="kr.co.trip.mvc.vo.Trip_Diary_HotelVO" alias="htvo"/> -->
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Trip_Diary_CommVO" alias="covo"/>
+		 	 
+		 	 
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Dia_CommVO" alias="dcvo"/>
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Dia_PlanVO" alias="dpvo"/>
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Dia_RecordVO" alias="drvo"/>
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Plan_PayVO" alias="ppvo"/>
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Plan_ScheduleVO" alias="psvo"/>
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Rec_MemoVO" alias="rmvo"/>
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Rec_PayVO" alias="rpvo"/>
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Rec_PhotoVO" alias="rphvo"/>
+		 	 <typeAlias type="kr.co.trip.mvc.vo.Rec_ScheduleVO" alias="rsvo"/>
+		 	 
+		 	 
+		 	 
+		 
+		 
+	 </typeAliases>
+ <!-- 스프링에게 위임한다. (mybatis의 핵심)
+ 	<environments default="">  //하위 속성이 필요함
+		 <environment id="">
+		 	<transactionManager type="JDBC"/>
+ 			<dataSource type="JNDI">
+				<property name="data_source" value="java:comp/env/jdbc/myora"/>
+ 			</dataSource>
+ 		</environment>
+ </environments>
+ <mappers>
+ 	<mapper resource="mapper/tboard.xml"/>
+ </mappers> -->
+ </configuration>

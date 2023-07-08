@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+	<!-- security영역 -->
+	<security:http use-expressions="true">
+		<!-- permitAll(): 권한이 필요없고 모두 접근하겠다. denyAll(): 권한이 있든 없든 모두 거부하겠다. isAuthenticated(): 
+			인증된 사용자 여부를 체크 isAnonymous(): 익명 사용자 여부 체크 -->
+		<security:csrf disabled="true" />
+		<security:intercept-url pattern="/admin/"
+			access="permitAll()" />
+		<security:intercept-url pattern="/admin/welcome"
+			access="permitAll()" />
+		<security:intercept-url pattern="/admin/login"
+			access="permitAll()" />
+		<security:intercept-url pattern="/admin/logout"
+			access="permitAll()" />
+
+		<!-- hasAnyRole(): 지정한 권한 중 하나라도 가지고 있을때 접근을 허용한다. -->
+		<security:intercept-url pattern="/admin/userInfo"
+			access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" />
+		<!-- hasRole(): 지정한 권한을 가지고 있는 경우에만 접근을 허용한다. -->
+		<security:intercept-url pattern="/admin/admin"
+			access="hasRole('ROLE_ADMIN')" />
+		<!-- 권한이 있는 사용자만 보이도록 설정 -->
+		<security:intercept-url pattern="/admin/other/**"
+			access="isAuthenticated()" />
+		<security:intercept-url pattern="/admin/survey/surveyForm"
+		access="hasRole('ROLE_ADMIN')"/>	
+
+		<security:access-denied-handler
+			error-page="/403" />
+
+		<!-- authentication-failure-url: login실패시 핸들러 매핑에게 리다이렉트할 경로 login-processing-url: 
+			스프링이 처리하는 url login-page: 로그인 폼 always-use-default-target: 무조건 지정한 핸들러로 이동 -->
+		<security:form-login login-page="/admin/login"
+			login-processing-url="/j_spring_security_check"
+			default-target-url="/admin/userInfo" always-use-default-target="false"
+			authentication-failure-url="/login?error=true"
+			username-parameter="username" password-parameter="password" />
+
+		<!-- logout-success-url: 로그아웃 이후 이동할 페이지 logout-url: 로그아웃 url delete-cookies 
+			= JSESSIONID: 로그아웃 후 쿠키 삭제 -->
+		<security:logout logout-url="/admin/logout"
+			logout-success-url="/admin/logoutSuccessful" delete-cookies="JSESSIONID"
+			invalidate-session="true" />
+	</security:http>
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="xman1" authorities="ROLE_USER"
+					password="1" />
+				<security:user name="admin1"
+					authorities="ROLE_USER,ROLE_ADMIN" password="1" />
+			</security:user-service>
+		</security:authentication-provider>
+
+		<!-- 데이터베이스에 인증테이블을 활용 -->
+		<security:authentication-provider>
+			<security:jdbc-user-service
+				data-source-ref="dataSource"
+				users-by-username-query="SELECT USERNAME, PASSWORD, ENABLE FROM USERS WHERE USERNAME=?"
+				authorities-by-username-query="SELECT USERNAME, 'ROLE_'||USER_ROLE AS USER_ROLE FROM USER_ROLES WHERE USERNAME=?" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+</beans>

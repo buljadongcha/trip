@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<aop:aspectj-autoproxy/>
+<!--  
+	@Component : 일반 빈을 만들때
+	@Controller : Controller에 의해서 요청되는 모델관련 빈을 만들 때
+	@Repository : 자원관련 빈을 만들 때
+	@Service : 요청 -> Filter -> DisparhcerServlet(Controller) -> @Controller(model) -> HanderMapping(요청분석) -> 모델이 실행
+		-> @Service(트랜젝션 처리) -> @Repository(Dao) -> Database처리(SqlSessionFactoryBean)
+	@REstController : RestFulAPI : json을 서비스하기 위해서 많이 사용함
+	@ControllerAdvice : AOP에서 공통관심사항을 Advice라 했다. Controller단에서 Advice를 적용하고 싶을 때 사용한다. 예) 예외처리에 주로 사용함	
+-->	
+	<context:component-scan base-package="kr.co.trip.mvc/"/>
+	<!-- bean id="advice" class="kr.co.kosmo.mvc.advice.TodayAdvice"/-->
+	<mvc:annotation-driven/>
+	<mvc:resources location="/resources/" mapping="/resources/**"/>
+	
+	
+	<!-- Transactional AOP 설정 S-->
+	<bean id="tm" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<tx:annotation-driven transaction-manager="tm"/>
+	
+	
+	<!-- Transactional AOP 설정 E-->
+	
+	
+	
+	
+	
+	
+	<!-- MyBatis SqlSessionFactoryBean에서 config.xml에서 위임받은 설정을 한다. -->
+	<bean id="factoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:kr/co/trip/config/config.xml"/>
+		<property name="mapperLocations" value="classpath*:kr/co/trip/mapper/*.xml"/>
+	</bean>
+	
+	<!-- Spring 제공하는 SqlSessionTemplate -->
+	<bean id="ss" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="factoryBean"/>
+	</bean>
+	
+	<!-- CommonsMultipartResolver를 등록 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+	
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/"/>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+</beans>

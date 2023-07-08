@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tripdiary">
+
+	<!-- 다이어리 -->
+	<insert id="diaryadd" parameterType="divo">
+	<!-- DIA_NUM,DIA_NICK,DIA_SUB,DIA_SUMM,DIA_START,DIA_END,DIA_THUMBNAIL -->
+	INSERT INTO TRIP_DIARY VALUES (TRIP_DIARY_SEQ.NEXTVAL, #{dia_nick},#{dia_sub},#{dia_summ},sysdate,sysdate+4,#{dia_thumbnail})
+	</insert>
+	
+	<!-- 다이어리 레코드 -->
+	<!-- DIA_REC_NUM,DIA_REC_CODE,DIA_REC_NDAY -->
+	<insert id="recadd" parameterType="java.util.List">
+		<selectKey keyProperty="dia_rec_code" resultType="int" order="BEFORE">
+			select Trip_Diary_seq.currVal from dual
+		</selectKey>
+		<foreach collection="list" item="e" separator=" "
+			open="insert all" close="select * from dual">
+			into dia_record values(DIA_RECORD_FUNC,#{dia_rec_code},#{e.dia_rec_nday})
+		</foreach>
+	</insert>
+	
+	<!-- 다이어리 레코드 스케쥴 -->
+	<insert id="recScheduleAdd" parameterType="java.util.List">
+		<selectKey keyProperty="rec_sc_code" resultType="int" order="BEFORE">
+			select dia_record_seq.currVal from dual
+		</selectKey>
+		<foreach collection="list" item="e" separator=" "
+			open="insert all" close="select * from dual">
+			<!-- REC_SC_NUM,REC_SC_CODE,REC_SC_LOCA,REC_SC_TIME,REC_SC_ADDR,REC_SC_SEQ -->
+			into rec_schedule values(REC_SCHEDULE_FUNC,#{rec_sc_code},#{e.rec_sc_loca},#{e.rec_sc_time},#{e.rec_sc_addr},'sc'||total_smp_FUNC,#{e.rec_sc_memo})
+		</foreach>
+	</insert>
+	
+	
+	<!-- 다이어리 레코드 메모 -->
+	<insert id="recMemoadd" parameterType="java.util.List">
+		<selectKey keyProperty="rec_memo_code" resultType="int" order="BEFORE">
+			select dia_record_seq.currVal from dual
+		</selectKey>
+		<foreach collection="list" item="e" separator=" "
+			open="insert all" close="select * from dual">
+			<!-- REC_MEMO_NUM,REC_MEMO_CODE,REC_MEMO_CONT,REC_MEMO_SEQ -->
+			into rec_memo values(REC_MEMO_FUNC,#{rec_memo_code},#{e.rec_memo_cont},'mm'||total_smp_FUNC)
+		</foreach>
+	</insert>
+	
+	
+	<!-- 다이어리 레코드 사진 -->
+	<insert id="recPhotoadd" parameterType="java.util.List">
+		<selectKey keyProperty="rec_photo_code" resultType="int" order="BEFORE">
+			select dia_record_seq.currVal from dual
+		</selectKey>
+		<foreach collection="list" item="e" separator=" "
+			open="insert all" close="select * from dual">
+			into rec_photo values(REC_PHOTO_FUNC,#{rec_photo_code},#{e.rec_photo_title},'po'||total_smp_FUNC)
+		</foreach>
+	</insert>
+	
+		<!-- 다이어리 레코드 경비 -->
+	<insert id="recPayadd" parameterType="java.util.List">
+		<selectKey keyProperty="rec_pay_code" resultType="int" order="BEFORE">
+			select REC_SCHEDULE_SEQ.currVal from dual
+		</selectKey>
+		<foreach collection="list" item="e" separator=" "
+			open="insert all" close="select * from dual">
+			into rec_pay values(REC_PAY_FUNC,#{rec_pay_code},#{e.rec_pay_cost},#{e.rec_pay_type})
+		</foreach>
+	</insert>
+	
+	
+	
+<!-- 
+	<resultMap type="divo" id="diaryview">
+	<id property="dia_num" column="dia_num" javaType="int" />
+	<result property="dia_id" column="dia_id" />
+	<result property="dia_sub" column="dia_sub" />
+	<result property="dia_summ" column="dia_summ" />
+	<result property="dia_photo" column="dia_photo" />
+	<result property="dia_loca" column="dia_loca" />
+	<result property="dia_date" column="dia_date"/>
+	<collection property="tranList" javaType="java.util.List" ofType="trvo">
+		<result property="dia_tran_name" column="dia_tran_name" />
+		<result property="dia_tran_code" column="dia_tran_code" javaType="int" />	
+		<result property="dia_tran_date" column="dia_tran_date" />
+		<result property="dia_tran_loca" column="dia_tran_loca" />
+	</collection>
+	호텔 리스트 
+	<collection property="hotelList" javaType="java.util.List" ofType="htvo">
+		<result property="dia_hotel_name" column="dia_hotel_name" />
+		<result property="dia_hotel_code" column="dia_hotel_code" javaType="int" />	
+		<result property="dia_hotel_date" column="dia_hotel_date" />
+		<result property="dia_hotel_addr" column="dia_hotel_addr" />
+		<result property="dia_hotel_loca" column="dia_hotel_loca" />
+	</collection>
+	플랜리스트 
+	<collection property="planlist" javaType="java.util.List" ofType="plvo">
+		<result property="dia_plan_title" column="dia_plan_title" />
+		<result property="dia_plan_code" column="dia_plan_code" javaType="int" />	
+		<result property="dia_plan_date" column="dia_plan_date" />
+		<result property="dia_plan_loca" column="dia_plan_loca" />
+		<result property="dia_plan_memo" column="dia_plan_memo" />
+		<result property="dia_plan_pay_type" column="dia_plan_pay_type" />
+		<result property="dia_plan_pay" column="dia_plan_pay" javaType="int"/>
+	</collection>
+	</resultMap>
+
+	<select id="diaryDetail" parameterType="int" resultMap="diaryview">
+	SELECT DIA_NUM,DIA_ID,DIA_SUB,DIA_SUMM,DIA_PHOTO,DIA_LOCA,DIA_DATE,
+	DIA_TRAN_NAME,DIA_TRAN_CODE,DIA_TRAN_DATE,DIA_TRAN_LOCA
+	FROM TRIP_DIARY, DIARY_TRAN
+	WHERE dia_num = dia_tran_code AND dia_num=#{dia_num}	
+	</select>
+	 -->
+	
+	
+	<!-- 댓글 -->
+	<insert id="coadd" parameterType="covo">
+	INSERT INTO diary_comm VALUES 
+	 	(dia_comm_num_seq.NEXTVAL,#{dia_code},#{dia_comm_nick},#{dia_comm_cont},SYSDATE,#{dia_comm_ip})
+	</insert>
+	
+</mapper>
