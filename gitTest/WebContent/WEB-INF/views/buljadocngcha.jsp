@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>여기는 나의 첫 깃 테스트</h1>
+<h1>안녕하세요</h1>
 </body>
 </html>
